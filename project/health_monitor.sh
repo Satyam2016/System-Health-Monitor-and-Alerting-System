@@ -1,8 +1,8 @@
 
 #!/bin/bash
 
-source alert_system.sh
-source generate_report.sh
+. ./alert_system.sh
+. ./generate_report.sh
 
 # Define log file paths
 CPU_LOG="cpu.log"
@@ -10,9 +10,21 @@ MEMORY_LOG="memory.log"
 DISK_LOG="disk.log"
 
 #truncating the file to size zero
-#truncate -s 0 "$CPU_LOG"
-#truncate -s 0 "$MEMORY_LOG"
-#truncate -s 0 "$DISK_LOG"
+if [ -e "$CPU_LOG" ];
+then
+	truncate -s 0 "$CPU_LOG"
+fi
+
+if [ -e "$MEMORY_LOG" ]
+then
+	truncate -s 0 "$MEMORY_LOG"
+fi
+
+if [ -e  "$DISK_LOG" ]
+then
+	truncate -s 0 "$DISK_LOG"
+fi
+
 
 # Function to collect CPU usage
 monitor_cpu() {
@@ -32,15 +44,16 @@ monitor_disk() {
   df -h >> "$DISK_LOG"
 }
 
-
+i=1
 # Main monitoring loop
-for i in {1..5};
+while [ $i -le 5 ];
 do
   monitor_cpu
   monitor_memory
   monitor_disk
   check_cpu_alert
   sleep 10  # Adjust the sleep interval (in seconds) as needed
+  i=$(( i+1 ))
 done
 
 generate_daily_report

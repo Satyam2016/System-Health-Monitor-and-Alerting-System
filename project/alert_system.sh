@@ -12,5 +12,4 @@ check_cpu_alert() {
   fi
 }
 
-check_cpu_alert
 

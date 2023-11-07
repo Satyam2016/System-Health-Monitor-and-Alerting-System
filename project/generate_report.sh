@@ -29,4 +29,3 @@ generate_daily_report() {
 
 }
 
-generate_daily_report
